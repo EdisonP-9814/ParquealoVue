@@ -1,0 +1,17 @@
+[
+    {
+      "id": "1",
+      "username": "1234567890",
+      "vehiclePlate": "ABC123"
+    },
+    {
+      "id": "2",
+      "username": "0987654321",
+      "vehiclePlate": "XYZ789"
+    },
+    {
+      "id": "3",
+      "username": "1122334455",
+      "vehiclePlate": "DEF456"
+    }
+  ]
