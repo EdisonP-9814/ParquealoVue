@@ -36,7 +36,6 @@ export default defineComponent({
         router.push('/espacios')
       } catch (err) {
         error.value = 'Credenciales inválidas'
-        console.error('Error de inicio de sesión:', err)
       }
     }
 

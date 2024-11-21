@@ -8,7 +8,7 @@ interface User {
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null as User | null,
+    user: JSON.parse(localStorage.getItem('user') || 'null') as User | null,
   }),
   getters: {
     isAuthenticated: (state) => !!state.user,
@@ -23,6 +23,7 @@ export const useAuthStore = defineStore('auth', {
 
         if (user) {
           this.user = user
+          localStorage.setItem('user', JSON.stringify(user))
         } else {
           throw new Error('Invalid credentials')
         }
@@ -33,6 +34,7 @@ export const useAuthStore = defineStore('auth', {
     },
     logout() {
       this.user = null
+      localStorage.removeItem('user')
     },
   },
 })

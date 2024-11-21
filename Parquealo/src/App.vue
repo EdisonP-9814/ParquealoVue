@@ -3,8 +3,8 @@
     <header>
       <nav>
         <router-link to="/">Home</router-link> |
-        <router-link to="/login">Inicio de Sesión</router-link> |
-        <router-link to="/espacios">Espacios</router-link>
+        <router-link to="/login" v-if="!isLoggedIn">Inicio de Sesión</router-link>
+        <router-link to="/espacios" v-if="isLoggedIn">Espacios</router-link>
         <button v-if="isLoggedIn" @click="logout">Cerrar Sesión</button>
       </nav>
     </header>
