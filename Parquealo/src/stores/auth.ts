@@ -1,17 +1,22 @@
 import { defineStore } from 'pinia'
 
-interface User {
+export interface User {
   id: string;
   username: string;
-  vehiclePlate: string;
+  role: 'client' | 'supervisor' | 'admin';
+  vehiclePlate?: string;
+  password?: string;
 }
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: JSON.parse(localStorage.getItem('user') || 'null') as User | null,
+    user: null as User | null,
   }),
   getters: {
     isAuthenticated: (state) => !!state.user,
+    isAdmin: (state) => state.user?.role === 'admin',
+    isSupervisor: (state) => state.user?.role === 'supervisor',
+    isClient: (state) => state.user?.role === 'client',
   },
   actions: {
     async login(username: string, password: string) {
@@ -19,11 +24,13 @@ export const useAuthStore = defineStore('auth', {
         const response = await fetch('/users.json')
         const users: User[] = await response.json()
 
-        const user = users.find(u => u.username === username && u.vehiclePlate === password)
+        const user = users.find(u =>
+          u.username === username &&
+          (u.role === 'client' ? u.vehiclePlate === password : u.password === password)
+        )
 
         if (user) {
           this.user = user
-          localStorage.setItem('user', JSON.stringify(user))
         } else {
           throw new Error('Invalid credentials')
         }
@@ -34,7 +41,6 @@ export const useAuthStore = defineStore('auth', {
     },
     logout() {
       this.user = null
-      localStorage.removeItem('user')
     },
   },
 })

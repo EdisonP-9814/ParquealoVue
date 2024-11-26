@@ -3,9 +3,19 @@
     <header>
       <nav>
         <router-link to="/">Home</router-link> |
-        <router-link to="/login" v-if="!isLoggedIn">Inicio de Sesión</router-link>
-        <router-link to="/espacios" v-if="isLoggedIn">Espacios</router-link>
-        <button v-if="isLoggedIn" @click="logout">Cerrar Sesión</button>
+        <router-link to="/espacios">Espacios</router-link>
+        <template v-if="authStore.isSupervisor || authStore.isAdmin">
+          | <router-link to="/supervisor">Supervisor</router-link>
+        </template>
+        <template v-if="authStore.isAdmin">
+          | <router-link to="/admin">Admin</router-link>
+        </template>
+        <template v-if="authStore.isAuthenticated">
+          | <a href="#" @click.prevent="logout">Cerrar Sesión</a>
+        </template>
+        <template v-else>
+          | <router-link to="/login">Iniciar Sesión</router-link>
+        </template>
       </nav>
     </header>
     <main>
@@ -18,9 +28,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from './stores/auth'
+import { useAuthStore } from '@/stores/auth'
 
 export default defineComponent({
   name: 'App',
@@ -28,15 +38,13 @@ export default defineComponent({
     const authStore = useAuthStore()
     const router = useRouter()
 
-    const isLoggedIn = computed(() => authStore.isAuthenticated)
-
     const logout = () => {
       authStore.logout()
       router.push('/login')
     }
 
     return {
-      isLoggedIn,
+      authStore,
       logout
     }
   }
